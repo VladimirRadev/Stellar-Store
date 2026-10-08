@@ -57,6 +57,33 @@ forge script script/Deploy.s.sol --rpc-url "$SEPOLIA_RPC_URL" --broadcast
 
 The script checks that `VLAD_TOKEN` has code on the target chain, then deploys `StellarStore` in one transaction.
 
+## Web app
+
+Live: **https://vladimirradev.github.io/Stellar-Store/**
+
+A React 19 + wagmi 3 + viem single page in `web/`, built on the shared Stellar scaffold (`web/src/shell/` is
+byte-identical across the five repos; see `web/SCAFFOLD.md`). MetaMask (injected wallet) only, Sepolia only.
+
+- **Shop** — reads `items(id)` for ids 1–3 (price, buyable, name), a quantity stepper with the total cost,
+  then a two-step flow: `approve(store, total)` on VLAD when the allowance is too low, then `buy(id, amount)`.
+  Custom errors (`ItemNotBuyable`, `ZeroAmount`, ERC-20 allowance and balance errors) are decoded before the
+  wallet opens. A wallet with less VLAD than the total gets a link to the Faucet.
+- **Inventory** — your balances for ids 1–3 via one `balanceOfBatch` call, their value at current store prices,
+  and a link to play in the Arena.
+- The treasury address (the Arena prize pool) and its VLAD balance are read on-chain and linked to Blockscout.
+- Item metadata and art are static files in `web/public/metadata/`, published with the site.
+
+While `web/src/config/addresses.ts` holds zero addresses, the page shows a "not deployed yet" banner and
+switches every on-chain read off. `.github/workflows/pages.yml` builds `web/` and deploys it on every push to `main`.
+
+```shell
+cd web
+npm install
+npm run sync-abi   # after `forge build` in the repo root
+npm run dev        # http://localhost:5173/Stellar-Store/
+npm run build      # tsc -b && vite build, output in web/dist
+```
+
 ## Addresses (Ethereum Sepolia, chain ID 11155111)
 
 | Contract | Address |
