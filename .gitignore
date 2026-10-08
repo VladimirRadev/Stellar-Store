@@ -5,6 +5,7 @@
 out/
 cache/
 broadcast/**/dry-run
+broadcast/**/run-[0-9]*.json
 
 # Node / web
 node_modules/

@@ -47,15 +47,42 @@ Arena (GAME_ROLE) ──award(player, TROPHY, 1)─▶ StellarStore  (mints a tr
 
 ## Deploy
 
+The deploy script sends exactly one transaction: `new StellarStore(vlad, deployer, baseUri)`.
+It reads the key from the `PRIVATE_KEY` environment variable (no key is ever stored in this repo) and the token
+address from `VLAD_TOKEN`, and it stops if `VLAD_TOKEN` has no contract code on the target chain.
+
 ```shell
-# .env* files are git-ignored; export the variables in your shell or load them from a local .env
-export PRIVATE_KEY=0x...          # deployer key — never commit it
-export VLAD_TOKEN=0x...           # deployed $VLAD address on Sepolia (from Stellar-Faucet)
-export SEPOLIA_RPC_URL=https://... # any Sepolia RPC endpoint
-forge script script/Deploy.s.sol --rpc-url "$SEPOLIA_RPC_URL" --broadcast
+# PRIVATE_KEY lives in an env file outside the repo (.env* is git-ignored anyway)
+set -a; source /path/to/deployer.env; set +a
+VLAD_TOKEN=0x49ba857d553ef219B144b200F41acaf8CB6768E9 forge script script/Deploy.s.sol \
+  --rpc-url https://ethereum-sepolia-rpc.publicnode.com \
+  --broadcast --slow --skip-simulation -vvv
 ```
 
-The script checks that `VLAD_TOKEN` has code on the target chain, then deploys `StellarStore` in one transaction.
+Always deploy with `--skip-simulation`. Sepolia's current fork charges far more gas for contract creation than
+forge's local simulation, which uses the Cancun rules from `foundry.toml`: the `StellarStore` creation used
+14,255,966 gas on Sepolia. Without the flag, forge sets each gas limit to its local estimate × 1.3 and the
+transaction runs out of gas. With `--skip-simulation` (together with `--slow`), forge asks the Sepolia node for a
+gas estimate right before it sends the transaction.
+
+If the deployer account has an EIP-7702 delegation, the node accepts only one unconfirmed transaction at a time.
+If a send is rejected with "in-flight transaction limit reached for delegated accounts", wait about 20 seconds
+for the previous transaction to confirm, then rerun the same command with `--resume`; forge then sends only the
+transactions that are still missing.
+
+Verify without an Etherscan key, through Sourcify and Blockscout:
+
+```shell
+ARGS=$(cast abi-encode "constructor(address,address,string)" <vladToken> <deployer> \
+  "https://vladimirradev.github.io/Stellar-Store/metadata/")
+forge verify-contract <store> src/StellarStore.sol:StellarStore --chain 11155111 \
+  --verifier sourcify --constructor-args $ARGS --watch
+forge verify-contract <store> src/StellarStore.sol:StellarStore --chain 11155111 \
+  --verifier blockscout --verifier-url https://eth-sepolia.blockscout.com/api/ --constructor-args $ARGS --watch
+```
+
+The deployed addresses, transaction hash, gas used and verification results are recorded in
+`deployments/sepolia.json`.
 
 ## Web app
 
@@ -73,8 +100,8 @@ byte-identical across the five repos; see `web/SCAFFOLD.md`). MetaMask (injected
 - The treasury address (the Arena prize pool) and its VLAD balance are read on-chain and linked to Blockscout.
 - Item metadata and art are static files in `web/public/metadata/`, published with the site.
 
-While `web/src/config/addresses.ts` holds zero addresses, the page shows a "not deployed yet" banner and
-switches every on-chain read off. `.github/workflows/pages.yml` builds `web/` and deploys it on every push to `main`.
+The contract addresses live in `web/src/config/addresses.ts`. If an address there is the zero address, the page
+shows a "not deployed yet" banner and switches every on-chain read off. `.github/workflows/pages.yml` builds `web/` and deploys it on every push to `main`.
 
 ```shell
 cd web
@@ -86,10 +113,15 @@ npm run build      # tsc -b && vite build, output in web/dist
 
 ## Addresses (Ethereum Sepolia, chain ID 11155111)
 
-| Contract | Address |
-|---|---|
-| VLAD token | TODO |
-| StellarStore | TODO |
+| Contract | Address | Notes |
+|---|---|---|
+| StellarStore (ERC-1155) | [`0xc1F24EF5887bD340E0d992e8557A4b6E977f151b`](https://eth-sepolia.blockscout.com/address/0xc1F24EF5887bD340E0d992e8557A4b6E977f151b) | verified on Sourcify (exact match) and Blockscout |
+| VLAD token ($VLAD) | [`0x49ba857d553ef219B144b200F41acaf8CB6768E9`](https://eth-sepolia.blockscout.com/address/0x49ba857d553ef219B144b200F41acaf8CB6768E9) | deployed by [Stellar-Faucet](https://github.com/VladimirRadev/Stellar-Faucet) |
+| Deployer, admin and current treasury | [`0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4`](https://eth-sepolia.blockscout.com/address/0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4) | treasury moves to the Arena when Stellar-Arena is deployed |
+
+Deployment transaction:
+[`0x9d534be1…659eb2`](https://eth-sepolia.blockscout.com/tx/0x9d534be1e7ae7a66f091fdf2e72382dd2d15532903a81bb41e6f80eab9659eb2)
+(block 11,870,381).
 
 ## Develop
 

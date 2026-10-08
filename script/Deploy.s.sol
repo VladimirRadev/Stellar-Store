@@ -8,6 +8,7 @@ import {StellarStore} from "../src/StellarStore.sol";
 /// @notice Deploys StellarStore (exactly 1 transaction). The deployer becomes admin and the initial treasury.
 /// @dev Env: PRIVATE_KEY (deployer key, never hard-coded) and VLAD_TOKEN (the deployed $VLAD from Stellar-Faucet).
 ///      Later, the Stellar-Arena deploy calls grantRole(GAME_ROLE, arena) and setTreasury(arena).
+///      Run with --slow --skip-simulation: the local Cancun simulation underestimates Sepolia creation gas.
 contract Deploy is Script {
     string internal constant BASE_URI = "https://vladimirradev.github.io/Stellar-Store/metadata/";
 

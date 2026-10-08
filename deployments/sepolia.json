@@ -1,0 +1,35 @@
+{
+  "chainId": 11155111,
+  "deployer": "0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4",
+  "contracts": {
+    "StellarStore": {
+      "address": "0xc1F24EF5887bD340E0d992e8557A4b6E977f151b",
+      "txHash": "0x9d534be1e7ae7a66f091fdf2e72382dd2d15532903a81bb41e6f80eab9659eb2",
+      "block": 11870381,
+      "gasUsed": 14255966,
+      "constructorArgs": {
+        "vlad": "0x49ba857d553ef219B144b200F41acaf8CB6768E9",
+        "treasury": "0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4",
+        "baseUri": "https://vladimirradev.github.io/Stellar-Store/metadata/"
+      }
+    }
+  },
+  "external": {
+    "VladToken": {
+      "address": "0x49ba857d553ef219B144b200F41acaf8CB6768E9",
+      "source": "Stellar-Faucet deployments/sepolia.json"
+    }
+  },
+  "verified": {
+    "StellarStore": {
+      "sourcify": "exact_match",
+      "blockscout": "Pass - Verified (is_fully_verified = true)"
+    }
+  },
+  "cost": {
+    "effectiveGasPriceWei": 10000015,
+    "totalGasUsed": 14255966,
+    "totalWei": "142559873839490"
+  },
+  "notes": "One transaction (deployer nonce 6 -> 7), sent with forge script --broadcast --slow --skip-simulation so the Sepolia node estimated gas; no --resume was needed. Admin (DEFAULT_ADMIN_ROLE) and initial treasury are the deployer. Pending, done by the Stellar-Arena deploy: grantRole(GAME_ROLE, arena) and setTreasury(arena)."
+}

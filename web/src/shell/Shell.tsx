@@ -1,42 +1,35 @@
-import { useState, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useConnection, useSwitchChain } from 'wagmi'
 import { CHAIN_ID, footerContracts } from '../config/addresses'
 import { explorerAddressUrl, formatToken, isConfiguredAddress, truncateAddress } from './format'
-import { ArrowIcon, CloseIcon, ExternalIcon, GithubIcon, MenuIcon, StarGlyph } from './icons'
+import { ArrowIcon, ExternalIcon, GithubIcon, StarGlyph } from './icons'
 import { CURRENT_SITE, GITHUB_PROFILE, SITES, currentSite, getSite } from './sites'
 import { useVladBalance } from './useVladBalance'
 import { WalletButton } from './WalletButton'
 
 /** Page frame shared by all Stellar apps: top navigation, faucet hint, main content, footer. */
 export function Shell({ children }: { children: ReactNode }) {
-  const [menuOpen, setMenuOpen] = useState(false)
-
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-40 border-b border-border/70 bg-bg/75 backdrop-blur-xl">
+      {/* Sticky only from md up: on phones the three header rows would take too much height. */}
+      <header className="z-40 border-b border-border/70 bg-bg/75 backdrop-blur-xl md:sticky md:top-0">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex h-16 items-center gap-3">
+          <div className="flex h-14 min-w-0 items-center gap-3 md:h-16">
             <Brand />
             <div className="ml-auto hidden items-center gap-2 md:flex">
               <VladBalanceChip />
               <NetworkBadge />
             </div>
-            <div className="ml-auto md:ml-0">
+            <div className="ml-auto shrink-0 md:ml-0">
               <WalletButton />
             </div>
-            <button
-              type="button"
-              className="inline-flex size-10 items-center justify-center rounded-xl border border-border bg-surface/70 text-muted md:hidden"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-nav"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              {menuOpen ? <CloseIcon /> : <MenuIcon />}
-            </button>
           </div>
 
-          <nav aria-label="Stellar apps" className="-mb-px hidden gap-1 md:flex">
+          {/* One row of the five apps at every width. It scrolls inside itself, never the page. */}
+          <nav
+            aria-label="Stellar apps"
+            className="-mb-px flex min-w-0 gap-0.5 overflow-x-auto [scrollbar-width:none] md:gap-1 [&::-webkit-scrollbar]:hidden"
+          >
             {SITES.map((site) => {
               const active = site.key === CURRENT_SITE
               return (
@@ -44,13 +37,14 @@ export function Shell({ children }: { children: ReactNode }) {
                   key={site.key}
                   href={site.url}
                   aria-current={active ? 'page' : undefined}
-                  className={`relative px-3 pb-3 pt-1 text-sm font-medium transition ${
+                  title={site.tagline}
+                  className={`relative shrink-0 whitespace-nowrap px-2 pb-3 pt-1 text-[0.8125rem] font-medium transition md:px-3 md:text-sm ${
                     active ? 'text-text' : 'text-muted hover:text-text'
                   }`}
                 >
                   {site.navLabel}
                   {active ? (
-                    <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-gradient-to-r from-lime via-accent-2 to-accent" />
+                    <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-gradient-to-r from-lime via-accent-2 to-accent md:inset-x-3" />
                   ) : null}
                 </a>
               )
@@ -58,32 +52,7 @@ export function Shell({ children }: { children: ReactNode }) {
           </nav>
         </div>
 
-        {menuOpen ? (
-          <div id="mobile-nav" className="border-t border-border/70 bg-bg/95 px-4 pb-4 pt-3 md:hidden">
-            <nav aria-label="Stellar apps" className="flex flex-col gap-1">
-              {SITES.map((site) => {
-                const active = site.key === CURRENT_SITE
-                return (
-                  <a
-                    key={site.key}
-                    href={site.url}
-                    aria-current={active ? 'page' : undefined}
-                    className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm ${
-                      active ? 'bg-surface-2 text-text' : 'text-muted hover:bg-surface hover:text-text'
-                    }`}
-                  >
-                    <span className="font-medium">{site.name}</span>
-                    <span className="truncate pl-3 text-xs text-muted">{site.tagline}</span>
-                  </a>
-                )
-              })}
-            </nav>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <VladBalanceChip />
-              <NetworkBadge />
-            </div>
-          </div>
-        ) : null}
+        <MobileStatusRow />
       </header>
 
       <FaucetHint />
@@ -95,6 +64,20 @@ export function Shell({ children }: { children: ReactNode }) {
   )
 }
 
+/** Phones only, and only while a wallet is connected: VLAD balance + network badge under the nav. */
+function MobileStatusRow() {
+  const { isConnected } = useConnection()
+  if (!isConnected) return null
+  return (
+    <div className="border-t border-border/50 md:hidden">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-4 py-2 sm:px-6">
+        <VladBalanceChip />
+        <NetworkBadge />
+      </div>
+    </div>
+  )
+}
+
 function Brand() {
   return (
     <a href={getSite('faucet').url} className="flex min-w-0 items-center gap-2.5" aria-label="Stellar suite home">
@@ -102,7 +85,7 @@ function Brand() {
         <StarGlyph size={18} />
       </span>
       <span className="min-w-0 leading-tight">
-        <span className="block font-display text-[0.95rem] font-bold tracking-[0.22em] text-text">STELLAR</span>
+        <span className="block truncate font-display text-[0.95rem] font-bold tracking-[0.22em] text-text">STELLAR</span>
         <span className="hidden truncate text-[0.7rem] text-muted sm:block">personal Web3 suite · Sepolia</span>
       </span>
     </a>

@@ -70,11 +70,11 @@ export function StoreApp() {
 
       <section aria-label="Store statistics" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatTile
-          label="Arena prize pool"
+          label="Treasury balance"
           value={formatToken(data.prizePool)}
           unit="VLAD"
           loading={data.prizePoolLoading}
-          hint="treasury balance"
+          hint="VLAD held by the treasury"
           highlight
         />
         <StatTile

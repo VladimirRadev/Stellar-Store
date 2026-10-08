@@ -36,13 +36,13 @@ export function WalletButton() {
   const disconnect = useDisconnect()
   const [copied, setCopied] = useState(false)
 
-  if (!isConnected || !address) return <ConnectButton className="h-10 min-h-10 px-4 text-sm" compact />
+  if (!isConnected || !address) return <ConnectButton className="h-9 min-h-9 px-4 text-sm sm:h-10 sm:min-h-10" compact />
 
   return (
     <div className="flex items-center gap-1.5">
       <button
         type="button"
-        className="chip h-10 gap-2 font-mono text-[0.8rem] transition hover:border-accent-2/50"
+        className="chip h-9 gap-2 font-mono text-[0.8rem] transition hover:border-accent-2/50 sm:h-10"
         title="Copy address"
         aria-label={copied ? 'Address copied' : `Copy address ${address}`}
         onClick={async () => {
@@ -65,12 +65,15 @@ export function WalletButton() {
             <CheckIcon size={14} /> Copied
           </span>
         ) : (
-          truncateAddress(address)
+          <>
+            <span className="sm:hidden">{truncateAddress(address, 4, 4)}</span>
+            <span className="hidden sm:inline">{truncateAddress(address)}</span>
+          </>
         )}
       </button>
       <button
         type="button"
-        className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface/70 text-muted transition hover:border-danger/50 hover:text-danger"
+        className="inline-flex size-9 items-center justify-center rounded-full border border-border bg-surface/70 text-muted transition hover:border-danger/50 hover:text-danger sm:size-10"
         title="Disconnect"
         aria-label="Disconnect wallet"
         onClick={() => disconnect.mutate()}
