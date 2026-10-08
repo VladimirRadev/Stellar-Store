@@ -1,12 +1,10 @@
 import { formatToken } from '../shell/format'
 import { ArrowIcon } from '../shell/icons'
 import { NetworkGate } from '../shell/NetworkGate'
-import { getSite } from '../shell/sites'
 import { StatTile } from '../shell/StatTile'
-import { DEPLOYED, itemArt } from './catalog'
+import { ARENA_URL, DEPLOYED, itemArt } from './catalog'
 import type { StoreData } from './useStoreData'
 
-const ARENA_URL = getSite('arena').url
 
 export function InventoryTab({ data, onOpenShop }: { data: StoreData; onOpenShop: () => void }) {
   return (

@@ -14,10 +14,15 @@
       }
     }
   },
-  "external": {
+  "linked": {
     "VladToken": {
       "address": "0x49ba857d553ef219B144b200F41acaf8CB6768E9",
       "source": "Stellar-Faucet deployments/sepolia.json"
+    },
+    "StellarArena": {
+      "address": "0xE79302DAebc28297745afC206553afBeD9d04d60",
+      "source": "Stellar-Arena deployments/sepolia.json",
+      "role": "GAME_ROLE holder and store treasury (set by the Stellar-Arena deploy)"
     }
   },
   "verified": {
@@ -31,5 +36,5 @@
     "totalGasUsed": 14255966,
     "totalWei": "142559873839490"
   },
-  "notes": "One transaction (deployer nonce 6 -> 7), sent with forge script --broadcast --slow --skip-simulation so the Sepolia node estimated gas; no --resume was needed. Admin (DEFAULT_ADMIN_ROLE) and initial treasury are the deployer. Pending, done by the Stellar-Arena deploy: grantRole(GAME_ROLE, arena) and setTreasury(arena)."
+  "notes": "One transaction (deployer nonce 6 -> 7), sent with forge script --broadcast --slow --skip-simulation so the Sepolia node estimated gas; no --resume was needed. Admin (DEFAULT_ADMIN_ROLE) and initial treasury are the deployer. The Stellar-Arena deploy later called grantRole(GAME_ROLE, arena) and setTreasury(arena); treasury() now returns the StellarArena address."
 }

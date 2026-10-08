@@ -1,10 +1,19 @@
+import type { Address } from 'viem'
 import { iVladTokenAbi, stellarStoreAbi } from '../abi'
 import { CHAIN_ID, addresses } from '../config/addresses'
 import type { ErrorMessages } from '../shell/errors'
 import { formatToken, isConfiguredAddress, truncateAddress } from '../shell/format'
+import { getSite } from '../shell/sites'
 
 /** True once both contracts have real Sepolia addresses; until then every on-chain read is off. */
 export const DEPLOYED = isConfiguredAddress(addresses.vladToken) && isConfiguredAddress(addresses.store)
+
+/** The live Stellar Arena site (GitHub Pages). */
+export const ARENA_URL = getSite('arena').url
+
+/** True when `address` is the deployed StellarArena contract (the store's treasury once the Arena is wired). */
+export const isArenaAddress = (address: Address | undefined) =>
+  !!address && isConfiguredAddress(addresses.arena) && address.toLowerCase() === addresses.arena.toLowerCase()
 
 export const store = { address: addresses.store, abi: stellarStoreAbi, chainId: CHAIN_ID } as const
 export const token = { address: addresses.vladToken, abi: iVladTokenAbi, chainId: CHAIN_ID } as const

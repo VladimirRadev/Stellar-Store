@@ -9,11 +9,11 @@ import { ArrowIcon, CheckIcon, ExternalIcon, Spinner } from '../shell/icons'
 import { getSite } from '../shell/sites'
 import { TxButton } from '../shell/TxButton'
 import { ConnectButton } from '../shell/WalletButton'
-import { DEPLOYED, STORE_ERRORS, itemArt } from './catalog'
+import { ARENA_URL, DEPLOYED, STORE_ERRORS, itemArt } from './catalog'
 import type { StoreData, StoreItem, UserData } from './useStoreData'
 
 const MAX_QTY = 20
-const ARENA_URL = getSite('arena').url
+
 const FAUCET_URL = getSite('faucet').url
 
 export function ShopTab({ data, onOpenInventory }: { data: StoreData; onOpenInventory: () => void }) {

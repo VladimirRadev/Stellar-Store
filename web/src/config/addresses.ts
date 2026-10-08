@@ -12,10 +12,13 @@ export const CHAIN_ID = 11155111 as const
 export const addresses = {
   vladToken: '0x49ba857d553ef219B144b200F41acaf8CB6768E9',
   store: '0xc1F24EF5887bD340E0d992e8557A4b6E977f151b',
+  /** StellarArena (deployed by Stellar-Arena): holds GAME_ROLE here and is the store's treasury / prize pool. */
+  arena: '0xE79302DAebc28297745afC206553afBeD9d04d60',
 } as const satisfies Record<string, Address>
 
 /** Contracts listed in the footer, with Blockscout links. */
 export const footerContracts: readonly { label: string; address: Address }[] = [
   { label: 'VladToken ($VLAD)', address: addresses.vladToken },
   { label: 'StellarStore (ERC-1155)', address: addresses.store },
+  { label: 'StellarArena (treasury / prize pool)', address: addresses.arena },
 ]

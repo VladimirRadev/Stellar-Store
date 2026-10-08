@@ -3,17 +3,15 @@ import type { Address } from 'viem'
 import { useConnection } from 'wagmi'
 import { explorerAddressUrl, formatCompact, formatToken, truncateAddress } from '../shell/format'
 import { ArrowIcon, ExternalIcon, StarGlyph } from '../shell/icons'
-import { currentSite, getSite } from '../shell/sites'
+import { currentSite } from '../shell/sites'
 import { StatTile } from '../shell/StatTile'
 import { Tabs } from '../shell/Tabs'
-import { DEPLOYED, itemArt, metadataUrl } from './catalog'
+import { ARENA_URL, DEPLOYED, isArenaAddress, itemArt, metadataUrl } from './catalog'
 import { InventoryTab } from './InventoryTab'
 import { ShopTab } from './ShopTab'
 import { useStoreData } from './useStoreData'
 
 type TabKey = 'shop' | 'inventory'
-
-const ARENA_URL = getSite('arena').url
 
 /** Stellar Store: buy ERC-1155 Arena items with VLAD (Shop) and see what you own (Inventory). */
 export function StoreApp() {
@@ -31,6 +29,8 @@ export function StoreApp() {
   const counts = data.user.counts
   const owned = counts?.reduce((sum, n) => sum + n, 0n)
   const [sword, shield] = data.items
+  const treasuryIsArena = isArenaAddress(data.treasury)
+  const pool = data.prizePool
 
   return (
     <div className="space-y-12 sm:space-y-16">
@@ -70,11 +70,18 @@ export function StoreApp() {
 
       <section aria-label="Store statistics" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatTile
-          label="Treasury balance"
-          value={formatCompact(data.prizePool)}
+          label={treasuryIsArena ? 'Arena prize pool' : 'Treasury balance'}
+          // Full amount below 100k VLAD; compact (1.2M) above, so the value never truncates on phones.
+          value={pool !== undefined && pool < 100_000n * 10n ** 18n ? formatToken(pool, 18, 0) : formatCompact(pool)}
           unit="VLAD"
           loading={data.prizePoolLoading}
-          hint={data.prizePool !== undefined ? `${formatToken(data.prizePool, 18, 0)} VLAD` : 'funds the prize pool'}
+          hint={
+            treasuryIsArena
+              ? 'store proceeds + arena stakes'
+              : pool !== undefined
+                ? `${formatToken(pool, 18, 0)} VLAD`
+                : 'funds the prize pool'
+          }
           highlight
         />
         <StatTile
@@ -130,7 +137,8 @@ function TreasuryNote({ treasury }: { treasury: Address | undefined }) {
         <StarGlyph size={15} />
       </span>
       <p className="min-w-0 text-sm leading-relaxed text-text/90">
-        Every purchase funds the Arena prize pool: 100% of the VLAD you pay goes to the treasury{' '}
+        Every purchase funds the Arena prize pool: 100% of the VLAD you pay goes to{' '}
+        {isArenaAddress(treasury) ? 'the StellarArena contract' : 'the treasury'}{' '}
         {treasury ? (
           <a
             className="link inline-flex items-center gap-1 font-mono"

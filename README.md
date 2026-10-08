@@ -45,6 +45,9 @@ Arena (GAME_ROLE) ──award(player, TROPHY, 1)─▶ StellarStore  (mints a tr
   1. `grantRole(GAME_ROLE, arena)` — lets the Arena burn and award items;
   2. `setTreasury(arena)` — from then on **100% of store proceeds go to the Arena prize pool**.
 
+  On Sepolia both calls are done: `treasury()` returns the StellarArena address
+  `0xE79302DAebc28297745afC206553afBeD9d04d60`, which also holds `GAME_ROLE`.
+
 ## Deploy
 
 The deploy script sends exactly one transaction: `new StellarStore(vlad, deployer, baseUri)`.
@@ -117,7 +120,8 @@ npm run build      # tsc -b && vite build, output in web/dist
 |---|---|---|
 | StellarStore (ERC-1155) | [`0xc1F24EF5887bD340E0d992e8557A4b6E977f151b`](https://eth-sepolia.blockscout.com/address/0xc1F24EF5887bD340E0d992e8557A4b6E977f151b) | verified on Sourcify (exact match) and Blockscout |
 | VLAD token ($VLAD) | [`0x49ba857d553ef219B144b200F41acaf8CB6768E9`](https://eth-sepolia.blockscout.com/address/0x49ba857d553ef219B144b200F41acaf8CB6768E9) | deployed by [Stellar-Faucet](https://github.com/VladimirRadev/Stellar-Faucet) |
-| Deployer, admin and current treasury | [`0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4`](https://eth-sepolia.blockscout.com/address/0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4) | treasury moves to the Arena when Stellar-Arena is deployed |
+| StellarArena (treasury / prize pool) | [`0xE79302DAebc28297745afC206553afBeD9d04d60`](https://eth-sepolia.blockscout.com/address/0xE79302DAebc28297745afC206553afBeD9d04d60) | deployed by [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena); holds `GAME_ROLE` and is the store's `treasury` |
+| Deployer and admin | [`0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4`](https://eth-sepolia.blockscout.com/address/0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4) | holds `DEFAULT_ADMIN_ROLE` |
 
 Deployment transaction:
 [`0x9d534be1…659eb2`](https://eth-sepolia.blockscout.com/tx/0x9d534be1e7ae7a66f091fdf2e72382dd2d15532903a81bb41e6f80eab9659eb2)
