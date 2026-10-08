@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import type { Address } from 'viem'
 import { useConnection } from 'wagmi'
-import { explorerAddressUrl, formatToken, truncateAddress } from '../shell/format'
+import { explorerAddressUrl, formatCompact, formatToken, truncateAddress } from '../shell/format'
 import { ArrowIcon, ExternalIcon, StarGlyph } from '../shell/icons'
 import { currentSite, getSite } from '../shell/sites'
 import { StatTile } from '../shell/StatTile'
@@ -71,10 +71,10 @@ export function StoreApp() {
       <section aria-label="Store statistics" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatTile
           label="Treasury balance"
-          value={formatToken(data.prizePool)}
+          value={formatCompact(data.prizePool)}
           unit="VLAD"
           loading={data.prizePoolLoading}
-          hint="VLAD held by the treasury"
+          hint={data.prizePool !== undefined ? `${formatToken(data.prizePool, 18, 0)} VLAD` : 'funds the prize pool'}
           highlight
         />
         <StatTile
