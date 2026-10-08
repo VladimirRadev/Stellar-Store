@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Guardian Shield">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="46%" r="52%">
+      <stop offset="0" stop-color="#10B981" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#07110D"/>
+  <rect x="12" y="12" width="488" height="488" rx="40" fill="none" stroke="#10B981" stroke-opacity="0.45" stroke-width="2"/>
+  <circle cx="256" cy="256" r="236" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#34D399" stroke-opacity="0.18" stroke-width="2" stroke-dasharray="4 10"/>
+  <path d="M100 102 L103 113 L114 116 L103 119 L100 130 L97 119 L86 116 L97 113 Z" fill="#A3E635" fill-opacity="0.9"/>
+  <path d="M418 382 L420 390 L428 392 L420 394 L418 402 L416 394 L408 392 L416 390 Z" fill="#A3E635" fill-opacity="0.7"/>
+  <path d="M412 122 L413 127 L418 128 L413 129 L412 134 L411 129 L406 128 L411 127 Z" fill="#A3E635" fill-opacity="0.6"/>
+  <path d="M256 70 L404 120 V250 C404 344 338 408 256 446 C174 408 108 344 108 250 V120 Z" fill="#10B981"/>
+  <path d="M256 70 L404 120 V250 C404 344 338 408 256 446 Z" fill="#34D399"/>
+  <path d="M256 106 L372 145 V250 C372 326 322 380 256 412 C190 380 140 326 140 250 V145 Z" fill="#07110D"/>
+  <path d="M256 128 L352 160 V250 C352 314 310 360 256 388 C202 360 160 314 160 250 V160 Z" fill="none" stroke="#10B981" stroke-opacity="0.55" stroke-width="3"/>
+  <polygon points="256,176 269.5,221.4 309.3,222.7 277.9,247.1 288.9,285.3 256,263 223.1,285.3 234.1,247.1 202.7,222.7 242.5,221.4" fill="#A3E635" transform="translate(0 6)"/>
+</svg>

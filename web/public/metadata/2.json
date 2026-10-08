@@ -1,0 +1,12 @@
+{
+  "name": "Guardian Shield",
+  "description": "A Stellar Arena defence item. Bring it into an Arena run and, if you lose, half of your stake is refunded. Bought in the Stellar Store with $VLAD on Ethereum Sepolia.",
+  "image": "https://vladimirradev.github.io/Stellar-Store/metadata/2.svg",
+  "external_url": "https://vladimirradev.github.io/Stellar-Store/",
+  "background_color": "07110D",
+  "attributes": [
+    { "trait_type": "Type", "value": "Armor" },
+    { "trait_type": "Effect", "value": "50% stake refund on loss" },
+    { "trait_type": "Acquired", "value": "Bought with $VLAD" }
+  ]
+}

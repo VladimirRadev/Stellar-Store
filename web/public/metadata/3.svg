@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Arena Trophy">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="46%" r="52%">
+      <stop offset="0" stop-color="#10B981" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#07110D"/>
+  <rect x="12" y="12" width="488" height="488" rx="40" fill="none" stroke="#10B981" stroke-opacity="0.45" stroke-width="2"/>
+  <circle cx="256" cy="256" r="236" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#34D399" stroke-opacity="0.18" stroke-width="2" stroke-dasharray="4 10"/>
+  <path d="M104 106 L107 117 L118 120 L107 123 L104 134 L101 123 L90 120 L101 117 Z" fill="#A3E635" fill-opacity="0.9"/>
+  <path d="M414 390 L416 398 L424 400 L416 402 L414 410 L412 402 L404 400 L412 398 Z" fill="#A3E635" fill-opacity="0.7"/>
+  <path d="M404 112 L406 118 L412 120 L406 122 L404 128 L402 122 L396 120 L402 118 Z" fill="#A3E635" fill-opacity="0.6"/>
+  <path d="M116 374 L117 379 L122 380 L117 381 L116 386 L115 381 L110 380 L115 379 Z" fill="#A3E635" fill-opacity="0.6"/>
+  <path d="M178 140 H134 C134 206 156 238 192 246" fill="none" stroke="#A3E635" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M334 140 H378 C378 206 356 238 320 246" fill="none" stroke="#A3E635" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M176 120 H336 V200 C336 262 300 304 256 304 C212 304 176 262 176 200 Z" fill="#10B981"/>
+  <path d="M256 120 H336 V200 C336 262 300 304 256 304 Z" fill="#34D399"/>
+  <rect x="166" y="108" width="180" height="20" rx="10" fill="#34D399"/>
+  <polygon points="256,166 264.2,188.7 288.3,189.5 269.3,204.3 276,227.5 256,214 236,227.5 242.7,204.3 223.7,189.5 247.8,188.7" fill="#07110D" fill-opacity="0.85"/>
+  <rect x="240" y="302" width="32" height="54" fill="#10B981"/>
+  <rect x="198" y="352" width="116" height="24" rx="6" fill="#34D399"/>
+  <rect x="174" y="374" width="164" height="38" rx="8" fill="#10B981"/>
+  <rect x="216" y="386" width="80" height="14" rx="7" fill="#A3E635"/>
+</svg>

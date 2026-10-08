@@ -1,0 +1,11 @@
+{
+  "name": "Arena Trophy",
+  "description": "Awarded for winning an Arena run. It cannot be bought: only the Stellar Arena contract can mint it, as proof of a victory on Ethereum Sepolia.",
+  "image": "https://vladimirradev.github.io/Stellar-Store/metadata/3.svg",
+  "external_url": "https://vladimirradev.github.io/Stellar-Store/",
+  "background_color": "07110D",
+  "attributes": [
+    { "trait_type": "Type", "value": "Trophy" },
+    { "trait_type": "Acquired", "value": "Awarded for winning an Arena run" }
+  ]
+}

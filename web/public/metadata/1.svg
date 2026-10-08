@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Guardian Sword">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="46%" r="52%">
+      <stop offset="0" stop-color="#10B981" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#07110D"/>
+  <rect x="12" y="12" width="488" height="488" rx="40" fill="none" stroke="#10B981" stroke-opacity="0.45" stroke-width="2"/>
+  <circle cx="256" cy="256" r="236" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#34D399" stroke-opacity="0.18" stroke-width="2" stroke-dasharray="4 10"/>
+  <path d="M104 106 L107 117 L118 120 L107 123 L104 134 L101 123 L90 120 L101 117 Z" fill="#A3E635" fill-opacity="0.9"/>
+  <path d="M412 386 L414 394 L422 396 L414 398 L412 406 L410 398 L402 396 L410 394 Z" fill="#A3E635" fill-opacity="0.7"/>
+  <path d="M396 126 L397 131 L402 132 L397 133 L396 138 L395 133 L390 132 L395 131 Z" fill="#A3E635" fill-opacity="0.6"/>
+  <g transform="rotate(45 256 256)">
+    <polygon points="256,62 232,104 232,330 256,330" fill="#34D399"/>
+    <polygon points="256,62 280,104 280,330 256,330" fill="#10B981"/>
+    <line x1="256" y1="112" x2="256" y2="316" stroke="#07110D" stroke-opacity="0.55" stroke-width="4" stroke-linecap="round"/>
+    <rect x="172" y="330" width="168" height="24" rx="12" fill="#A3E635"/>
+    <circle cx="176" cy="342" r="16" fill="#A3E635"/>
+    <circle cx="336" cy="342" r="16" fill="#A3E635"/>
+    <rect x="243" y="354" width="26" height="82" rx="6" fill="#10B981"/>
+    <path d="M243 372 L269 362 M243 392 L269 382 M243 412 L269 402 M243 432 L269 422" stroke="#07110D" stroke-opacity="0.6" stroke-width="4"/>
+    <circle cx="256" cy="452" r="20" fill="#A3E635"/>
+    <circle cx="256" cy="452" r="8" fill="#07110D"/>
+  </g>
+</svg>
