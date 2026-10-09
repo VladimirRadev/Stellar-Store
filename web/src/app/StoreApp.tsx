@@ -139,20 +139,22 @@ function TreasuryNote({ treasury }: { treasury: Address | undefined }) {
       <p className="min-w-0 text-sm leading-relaxed text-text/90">
         Every purchase funds the Arena prize pool: 100% of the VLAD you pay goes to{' '}
         {isArenaAddress(treasury) ? 'the StellarArena contract' : 'the treasury'}{' '}
-        {treasury ? (
-          <a
-            className="link inline-flex items-center gap-1 font-mono"
-            href={explorerAddressUrl(treasury)}
-            target="_blank"
-            rel="noreferrer"
-            title={treasury}
-          >
-            {truncateAddress(treasury)} <ExternalIcon />
-          </a>
-        ) : (
-          <span className="font-mono text-muted">{DEPLOYED ? '…' : '(not deployed yet)'}</span>
-        )}
-        .
+        <span className="whitespace-nowrap">
+          {treasury ? (
+            <a
+              className="link inline-flex items-center gap-1 font-mono"
+              href={explorerAddressUrl(treasury)}
+              target="_blank"
+              rel="noreferrer"
+              title={treasury}
+            >
+              {truncateAddress(treasury)} <ExternalIcon />
+            </a>
+          ) : (
+            <span className="font-mono text-muted">{DEPLOYED ? '…' : '(not deployed yet)'}</span>
+          )}
+          .
+        </span>
       </p>
     </div>
   )
@@ -201,7 +203,8 @@ const HOW_IT_WORKS: { title: string; body: ReactNode }[] = [
     title: 'Arena-only burn and mint',
     body: (
       <>
-        Only the Stellar Arena holds <span className="font-mono text-text/90">GAME_ROLE</span>: it calls{' '}
+        Only the two Arena contracts, StellarArena and StellarArcade, hold{' '}
+        <span className="font-mono text-text/90">GAME_ROLE</span>: they call{' '}
         <span className="font-mono text-text/90">consume</span> to burn an item you use in a run and{' '}
         <span className="font-mono text-text/90">award</span> to mint a Trophy when you win. Nobody else can.
       </>

@@ -135,7 +135,7 @@ function ItemCard({
         ) : (
           <div className="space-y-3 border-t border-border/70 pt-4">
             <p className="text-sm leading-relaxed text-muted">
-              Minted by the Arena contract (it holds <span className="font-mono text-text/80">GAME_ROLE</span>) each
+              Minted by the Arena contracts (they hold <span className="font-mono text-text/80">GAME_ROLE</span>) each
               time you win a run.
             </p>
             <a className="btn btn-ghost w-full" href={ARENA_URL}>
