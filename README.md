@@ -35,7 +35,7 @@ Arena (GAME_ROLE) ──award(player, TROPHY, 1)─▶ StellarStore  (mints a tr
 | Role | Holder | Can call |
 |---|---|---|
 | `DEFAULT_ADMIN_ROLE` | deployer | `setItem`, `setTreasury`, `setBaseUri`, `grantRole` / `revokeRole` |
-| `GAME_ROLE` | Stellar-Arena contract | `consume` (burn a player's items), `award` (mint items, e.g. trophies) |
+| `GAME_ROLE` | StellarArena and StellarArcade (both from Stellar-Arena) | `consume` (burn a player's items), `award` (mint items, e.g. trophies) |
 
 ## Economy
 
@@ -92,7 +92,7 @@ The deployed addresses, transaction hash, gas used and verification results are 
 Live: **https://vladimirradev.github.io/Stellar-Store/**
 
 A React 19 + wagmi 3 + viem single page in `web/`, built on the shared Stellar scaffold (`web/src/shell/` is
-byte-identical across the five repos; see `web/SCAFFOLD.md`). MetaMask (injected wallet) only, Sepolia only.
+byte-identical across the six repos; see `web/SCAFFOLD.md`). MetaMask (injected wallet) only, Sepolia only.
 
 - **Shop** — reads `items(id)` for ids 1–3 (price, buyable, name), a quantity stepper with the total cost,
   then a two-step flow: `approve(store, total)` on VLAD when the allowance is too low, then `buy(id, amount)`.
@@ -121,6 +121,7 @@ npm run build      # tsc -b && vite build, output in web/dist
 | StellarStore (ERC-1155) | [`0xc1F24EF5887bD340E0d992e8557A4b6E977f151b`](https://eth-sepolia.blockscout.com/address/0xc1F24EF5887bD340E0d992e8557A4b6E977f151b) | verified on Sourcify (exact match) and Blockscout |
 | VLAD token ($VLAD) | [`0x49ba857d553ef219B144b200F41acaf8CB6768E9`](https://eth-sepolia.blockscout.com/address/0x49ba857d553ef219B144b200F41acaf8CB6768E9) | deployed by [Stellar-Faucet](https://github.com/VladimirRadev/Stellar-Faucet) |
 | StellarArena (treasury / prize pool) | [`0xE79302DAebc28297745afC206553afBeD9d04d60`](https://eth-sepolia.blockscout.com/address/0xE79302DAebc28297745afC206553afBeD9d04d60) | deployed by [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena); holds `GAME_ROLE` and is the store's `treasury` |
+| StellarArcade (29 cabinets) | [`0x64dc8Df451Da01ab2460584f04C29D2df517ac4b`](https://eth-sepolia.blockscout.com/address/0x64dc8Df451Da01ab2460584f04C29D2df517ac4b) | deployed by [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena); holds `GAME_ROLE` (granted in its deploy, block 11,876,094) |
 | Deployer and admin | [`0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4`](https://eth-sepolia.blockscout.com/address/0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4) | holds `DEFAULT_ADMIN_ROLE` |
 
 Deployment transaction:
@@ -149,10 +150,13 @@ End-to-end run on Ethereum Sepolia on 2026-10-09 from the deployer `0xEb0243ea72
 
 ## Part of the Stellar suite
 
-| Repo | Site |
-|---|---|
-| [Stellar-Faucet](https://github.com/VladimirRadev/Stellar-Faucet) | https://vladimirradev.github.io/Stellar-Faucet/ |
-| [Stellar-LP-Staking](https://github.com/VladimirRadev/Stellar-LP-Staking) | https://vladimirradev.github.io/Stellar-LP-Staking/ |
-| [Stellar-Bank](https://github.com/VladimirRadev/Stellar-Bank) | https://vladimirradev.github.io/Stellar-Bank/ |
-| **[Stellar-Store](https://github.com/VladimirRadev/Stellar-Store)** | https://vladimirradev.github.io/Stellar-Store/ |
-| [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena) | https://vladimirradev.github.io/Stellar-Arena/ |
+| App | Repository | Live site |
+|---|---|---|
+| Faucet ($VLAD token) | [Stellar-Faucet](https://github.com/VladimirRadev/Stellar-Faucet) | https://vladimirradev.github.io/Stellar-Faucet/ |
+| Swap & LP Staking | [Stellar-LP-Staking](https://github.com/VladimirRadev/Stellar-LP-Staking) | https://vladimirradev.github.io/Stellar-LP-Staking/ |
+| Bank | [Stellar-Bank](https://github.com/VladimirRadev/Stellar-Bank) | https://vladimirradev.github.io/Stellar-Bank/ |
+| Store | **[Stellar-Store](https://github.com/VladimirRadev/Stellar-Store)** (this repo) | https://vladimirradev.github.io/Stellar-Store/ |
+| Arena + Arcade | [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena) | https://vladimirradev.github.io/Stellar-Arena/ |
+| Stellargon (prediction market) | [Stellargon](https://github.com/VladimirRadev/Stellargon) | https://vladimirradev.github.io/Stellargon/ |
+
+Stellar is a personal portfolio brand, unrelated to the Stellar (XLM) network.
