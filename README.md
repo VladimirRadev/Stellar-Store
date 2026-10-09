@@ -136,6 +136,17 @@ forge test
 forge fmt --check
 ```
 
+## Smoke tests (2026-10-09)
+
+End-to-end run on Ethereum Sepolia on 2026-10-09 from the deployer `0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4` (an EIP-7702 delegated EOA), with `smoke.sh` (19 steps across the whole suite, one transaction at a time, each waiting for its receipt). After every transaction the script compared balances, reserves and events at the transaction's block with the block before it; "ok" means every such assertion passed. Step numbers are the suite-wide order. Rows for this repo (step 14 is the VLAD approval for the store):
+
+| Step | Function | Result | Tx (Blockscout) | Gas used |
+|---|---|---|---|---|
+| 14 | `vlad.approve(store, 25e18)` | ok | [`0xd7dfccd6…b011cb`](https://eth-sepolia.blockscout.com/tx/0xd7dfccd6b153c0a820606049d812516cae034b3790f075e7300fead6c6b011cb) | 128328 |
+| 15 | `store.buy(1, 1)` | ok | [`0x25170fc4…af5f1a`](https://eth-sepolia.blockscout.com/tx/0x25170fc47ef8e3bde0ea2b10a34eae68649ca7e20405737642dc96a819af5f1a) | 175113 |
+
+- Step 15 store: bought 1 Guardian Sword for 25 VLAD, paid to treasury 0xE79302DAebc28297745afC206553afBeD9d04d60
+
 ## Part of the Stellar suite
 
 | Repo | Site |
