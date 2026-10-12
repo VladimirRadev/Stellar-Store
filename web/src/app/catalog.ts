@@ -1,5 +1,5 @@
 import type { Address } from 'viem'
-import { iVladTokenAbi, stellarStoreAbi } from '../abi'
+import { iVladTokenAbi, stellarForgeAbi, stellarStoreAbi } from '../abi'
 import { CHAIN_ID, addresses } from '../config/addresses'
 import type { ErrorMessages } from '../shell/errors'
 import { formatToken, isConfiguredAddress, truncateAddress } from '../shell/format'
@@ -15,8 +15,12 @@ export const ARENA_URL = getSite('arena').url
 export const isArenaAddress = (address: Address | undefined) =>
   !!address && isConfiguredAddress(addresses.arena) && address.toLowerCase() === addresses.arena.toLowerCase()
 
+/** True once StellarForge has a real Sepolia address (the Forge tab switches its reads and button on). */
+export const FORGE_DEPLOYED = DEPLOYED && isConfiguredAddress(addresses.stellarForge)
+
 export const store = { address: addresses.store, abi: stellarStoreAbi, chainId: CHAIN_ID } as const
 export const token = { address: addresses.vladToken, abi: iVladTokenAbi, chainId: CHAIN_ID } as const
+export const forge = { address: addresses.stellarForge, abi: stellarForgeAbi, chainId: CHAIN_ID } as const
 
 export type CatalogItem = {
   id: bigint
@@ -73,6 +77,18 @@ export const STORE_ERRORS: ErrorMessages = {
     `Allowance too low: you approved ${formatToken(allowance as bigint)} VLAD but this purchase needs ${formatToken(needed as bigint)} VLAD. Approve first.`,
   ERC20InsufficientBalance: ([, balance, needed]) =>
     `Not enough VLAD: you have ${formatToken(balance as bigint)} VLAD and this purchase costs ${formatToken(needed as bigint)} VLAD.`,
+  ERC1155InvalidReceiver: ([receiver]) =>
+    `${truncateAddress(String(receiver))} cannot receive ERC-1155 items (a contract without onERC1155Received).`,
+}
+
+/** Readable sentences for the custom errors StellarForge.redeem() can revert with. */
+export const FORGE_ERRORS: ErrorMessages = {
+  InsufficientTrophies: ([have, need]) =>
+    `Not enough trophies: you have ${String(have)} and this redemption needs ${String(need)}.`,
+  NotRedeemable: ([id]) => `Item #${String(id)} cannot be redeemed at the Forge right now.`,
+  ZeroAmount: () => 'Choose a quantity of at least 1.',
+  AccessControlUnauthorizedAccount: () =>
+    'The Forge does not hold the Store game role yet, so it cannot burn trophies. Try again after the role is granted.',
   ERC1155InvalidReceiver: ([receiver]) =>
     `${truncateAddress(String(receiver))} cannot receive ERC-1155 items (a contract without onERC1155Received).`,
 }

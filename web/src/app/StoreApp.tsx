@@ -7,22 +7,26 @@ import { currentSite } from '../shell/sites'
 import { StatTile } from '../shell/StatTile'
 import { Tabs } from '../shell/Tabs'
 import { ARENA_URL, DEPLOYED, isArenaAddress, itemArt, metadataUrl } from './catalog'
+import { ForgeTab } from './ForgeTab'
 import { InventoryTab } from './InventoryTab'
 import { ShopTab } from './ShopTab'
 import { useStoreData } from './useStoreData'
 
-type TabKey = 'shop' | 'inventory'
+type TabKey = 'shop' | 'forge' | 'inventory'
 
-/** Stellar Store: buy ERC-1155 Arena items with VLAD (Shop) and see what you own (Inventory). */
+/** Tabs reachable by URL hash (#forge, #inventory); the Shop is the default and has no hash. */
+const tabFromHash = (hash: string): TabKey => (hash === '#inventory' ? 'inventory' : hash === '#forge' ? 'forge' : 'shop')
+
+/** Stellar Store: buy items with VLAD (Shop), redeem trophies for items (Forge), see what you own (Inventory). */
 export function StoreApp() {
   const data = useStoreData()
   const { isConnected } = useConnection()
-  const [tab, setTab] = useState<TabKey>(() => (window.location.hash === '#inventory' ? 'inventory' : 'shop'))
+  const [tab, setTab] = useState<TabKey>(() => tabFromHash(window.location.hash))
 
   const openTab = (key: TabKey, scroll = false) => {
     setTab(key)
     const { pathname, search } = window.location
-    window.history.replaceState(null, '', key === 'inventory' ? `${pathname}${search}#inventory` : `${pathname}${search}`)
+    window.history.replaceState(null, '', key === 'shop' ? `${pathname}${search}` : `${pathname}${search}#${key}`)
     if (scroll) document.getElementById('store')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
@@ -53,7 +57,12 @@ export function StoreApp() {
           <p className="mt-3 font-display text-lg text-text/90 sm:text-xl">ERC-1155 game items for the Arena, paid in $VLAD</p>
           <p className="mt-5 max-w-xl text-[0.95rem] leading-relaxed text-muted">
             Gear up before a run. The Guardian Sword adds +10 to your attack roll, the Guardian Shield gives back half
-            of your stake if you lose, and every won run earns you an Arena Trophy.
+            of your stake if you lose, and every won run earns you an Arena Trophy.{' '}
+            Redeem trophies for gear in the{' '}
+            <button type="button" className="link font-medium" onClick={() => openTab('forge', true)}>
+              Forge
+            </button>
+            : 2 trophies for a Sword, 3 for a Shield.
           </p>
           <TreasuryNote treasury={data.treasury} />
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -110,6 +119,7 @@ export function StoreApp() {
         <Tabs
           tabs={[
             { key: 'shop', label: 'Shop' },
+            { key: 'forge', label: 'Forge' },
             { key: 'inventory', label: owned && owned > 0n ? `Inventory · ${owned}` : 'Inventory' },
           ]}
           value={tab}
@@ -119,6 +129,8 @@ export function StoreApp() {
         <div className="mt-6" role="tabpanel">
           {tab === 'shop' ? (
             <ShopTab data={data} onOpenInventory={() => openTab('inventory', true)} />
+          ) : tab === 'forge' ? (
+            <ForgeTab data={data} onOpenInventory={() => openTab('inventory', true)} />
           ) : (
             <InventoryTab data={data} onOpenShop={() => openTab('shop', true)} />
           )}
@@ -200,13 +212,13 @@ const HOW_IT_WORKS: { title: string; body: ReactNode }[] = [
     ),
   },
   {
-    title: 'Arena-only burn and mint',
+    title: 'Game-role burn and mint',
     body: (
       <>
-        Only the two Arena contracts, StellarArena and StellarArcade, hold{' '}
-        <span className="font-mono text-text/90">GAME_ROLE</span>: they call{' '}
-        <span className="font-mono text-text/90">consume</span> to burn an item you use in a run and{' '}
-        <span className="font-mono text-text/90">award</span> to mint a Trophy when you win. Nobody else can.
+        Only contracts with <span className="font-mono text-text/90">GAME_ROLE</span> burn and mint: StellarArena and
+        StellarArcade call <span className="font-mono text-text/90">consume</span> to burn an item you use in a run and{' '}
+        <span className="font-mono text-text/90">award</span> to mint a Trophy when you win. The Forge burns only the
+        trophies of the wallet that calls it.
       </>
     ),
   },

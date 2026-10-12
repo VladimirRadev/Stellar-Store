@@ -11,7 +11,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "oxlint",
-    "sync-abi": "node scripts/sync-abi.mjs StellarStore IVladToken"
+    "sync-abi": "node scripts/sync-abi.mjs StellarStore StellarForge IVladToken"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.1",

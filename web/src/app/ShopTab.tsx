@@ -148,7 +148,7 @@ function ItemCard({
   )
 }
 
-function QuantityStepper({ value, onChange, itemName }: { value: number; onChange: (n: number) => void; itemName: string }) {
+export function QuantityStepper({ value, onChange, itemName }: { value: number; onChange: (n: number) => void; itemName: string }) {
   const btn =
     'grid size-10 place-items-center text-lg text-muted transition hover:text-text disabled:cursor-not-allowed disabled:opacity-35'
   return (

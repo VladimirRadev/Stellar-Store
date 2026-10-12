@@ -159,6 +159,11 @@ byte-identical across the seven repos; see `web/SCAFFOLD.md`). MetaMask (injecte
   then a two-step flow: `approve(store, total)` on VLAD when the allowance is too low, then `buy(id, amount)`.
   Custom errors (`ItemNotBuyable`, `ZeroAmount`, ERC-20 allowance and balance errors) are decoded before the
   wallet opens. A wallet with less VLAD than the total gets a link to the Faucet.
+- **Forge** (`#forge`) — your trophy balance, the trophy price of each item (`trophyPrice(id)`, shown as 2 and 3
+  until the Forge is deployed), a quantity stepper with the trophy cost, and one `redeem(id, amount)` transaction.
+  There is no approval step: the Forge holds the store's `GAME_ROLE`. A wallet with too few trophies sees how many
+  more it needs and a link to the Arena. While `stellarForge` in `addresses.ts` is the zero address, the tab shows
+  "The Forge is not deployed yet" and the button stays disabled.
 - **Inventory** — your balances for ids 1–3 via one `balanceOfBatch` call, their value at current store prices,
   and a link to play in the Arena.
 - The treasury address (the Arena prize pool) and its VLAD balance are read on-chain and linked to Blockscout.
