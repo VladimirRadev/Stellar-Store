@@ -92,7 +92,7 @@ The deployed addresses, transaction hash, gas used and verification results are 
 Live: **https://vladimirradev.github.io/Stellar-Store/**
 
 A React 19 + wagmi 3 + viem single page in `web/`, built on the shared Stellar scaffold (`web/src/shell/` is
-byte-identical across the six repos; see `web/SCAFFOLD.md`). MetaMask (injected wallet) only, Sepolia only.
+byte-identical across the seven repos; see `web/SCAFFOLD.md`). MetaMask (injected wallet) only, Sepolia only.
 
 - **Shop** — reads `items(id)` for ids 1–3 (price, buyable, name), a quantity stepper with the total cost,
   then a two-step flow: `approve(store, total)` on VLAD when the allowance is too low, then `buy(id, amount)`.
@@ -158,5 +158,6 @@ End-to-end run on Ethereum Sepolia on 2026-10-09 from the deployer `0xEb0243ea72
 | Store | **[Stellar-Store](https://github.com/VladimirRadev/Stellar-Store)** (this repo) | https://vladimirradev.github.io/Stellar-Store/ |
 | Arena + Arcade | [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena) | https://vladimirradev.github.io/Stellar-Arena/ |
 | Stellargon (prediction market) | [Stellargon](https://github.com/VladimirRadev/Stellargon) | https://vladimirradev.github.io/Stellargon/ |
+| CV (Vladimir Radev) | [Stellar-CV](https://github.com/VladimirRadev/Stellar-CV) | https://vladimirradev.github.io/Stellar-CV/ |
 
 Stellar is a personal portfolio brand, unrelated to the Stellar (XLM) network.
