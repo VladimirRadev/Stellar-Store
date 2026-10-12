@@ -39,7 +39,7 @@ player ──redeem(id, n)──▶ StellarForge (GAME_ROLE) ──consume(playe
 | Role | Holder | Can call |
 |---|---|---|
 | `DEFAULT_ADMIN_ROLE` | deployer | `setItem`, `setTreasury`, `setBaseUri`, `grantRole` / `revokeRole` |
-| `GAME_ROLE` | StellarArena and StellarArcade (both from Stellar-Arena); StellarForge once deployed | `consume` (burn a player's items), `award` (mint items, e.g. trophies) |
+| `GAME_ROLE` | StellarArena and StellarArcade (both from Stellar-Arena); StellarForge (granted in block 11,898,527) | `consume` (burn a player's items), `award` (mint items, e.g. trophies) |
 | StellarForge `owner` | deployer | `setTrophyPrice` (change or disable a trophy price) |
 
 ## Economy
@@ -85,7 +85,9 @@ Trust model: the Forge holds the store's `GAME_ROLE`, the same role the Arena us
 or anyone who calls it, touch another player's items. Without `GAME_ROLE` every `redeem` reverts with the store's
 `AccessControlUnauthorizedAccount` error.
 
-Contract address: **pending deployment** (`web/src/config/addresses.ts` holds the zero address until then).
+Contract address: [`0x9e4aB76402ecdCf0381eBfbab82A025EC4b31045`](https://eth-sepolia.blockscout.com/address/0x9e4aB76402ecdCf0381eBfbab82A025EC4b31045), verified on Sourcify (exact match) and Blockscout.
+Deployed in [`0xfefbfee2…f0f83f`](https://eth-sepolia.blockscout.com/tx/0xfefbfee2d8f36ca276139a613f3400044d0738e96b3cf28f677cc0e5b1f0f83f) (block 11,898,526, 3,034,507 gas); `grantRole(GAME_ROLE, forge)` in
+[`0xbdb21bcf…80a617`](https://eth-sepolia.blockscout.com/tx/0xbdb21bcf580d01ae68666248174c1ed1c8d98bc7e1aea6494dcd15526e80a617) (block 11,898,527, 133,511 gas).
 
 ## Deploy
 
@@ -146,7 +148,8 @@ forge verify-contract <forge> src/StellarForge.sol:StellarForge --chain 11155111
   --verifier blockscout --verifier-url https://eth-sepolia.blockscout.com/api/ --constructor-args $ARGS --watch
 ```
 
-After deployment, put the address in `web/src/config/addresses.ts` (`stellarForge`) to switch the Forge tab on.
+The Sepolia Forge is recorded in `deployments/sepolia.json` and in `web/src/config/addresses.ts` (`stellarForge`),
+which switches the Forge tab on.
 
 ## Web app
 
@@ -159,8 +162,8 @@ byte-identical across the seven repos; see `web/SCAFFOLD.md`). MetaMask (injecte
   then a two-step flow: `approve(store, total)` on VLAD when the allowance is too low, then `buy(id, amount)`.
   Custom errors (`ItemNotBuyable`, `ZeroAmount`, ERC-20 allowance and balance errors) are decoded before the
   wallet opens. A wallet with less VLAD than the total gets a link to the Faucet.
-- **Forge** (`#forge`) — your trophy balance, the trophy price of each item (`trophyPrice(id)`, shown as 2 and 3
-  until the Forge is deployed), a quantity stepper with the trophy cost, and one `redeem(id, amount)` transaction.
+- **Forge** (`#forge`) — your trophy balance, the trophy price of each item (`trophyPrice(id)`, read on-chain: 2 for a
+  Sword, 3 for a Shield), a quantity stepper with the trophy cost, and one `redeem(id, amount)` transaction.
   There is no approval step: the Forge holds the store's `GAME_ROLE`. A wallet with too few trophies sees how many
   more it needs and a link to the Arena. While `stellarForge` in `addresses.ts` is the zero address, the tab shows
   "The Forge is not deployed yet" and the button stays disabled.
@@ -188,12 +191,14 @@ npm run build      # tsc -b && vite build, output in web/dist
 | VLAD token ($VLAD) | [`0x49ba857d553ef219B144b200F41acaf8CB6768E9`](https://eth-sepolia.blockscout.com/address/0x49ba857d553ef219B144b200F41acaf8CB6768E9) | deployed by [Stellar-Faucet](https://github.com/VladimirRadev/Stellar-Faucet) |
 | StellarArena (treasury / prize pool) | [`0xE79302DAebc28297745afC206553afBeD9d04d60`](https://eth-sepolia.blockscout.com/address/0xE79302DAebc28297745afC206553afBeD9d04d60) | deployed by [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena); holds `GAME_ROLE` and is the store's `treasury` |
 | StellarArcade (29 cabinets) | [`0x64dc8Df451Da01ab2460584f04C29D2df517ac4b`](https://eth-sepolia.blockscout.com/address/0x64dc8Df451Da01ab2460584f04C29D2df517ac4b) | deployed by [Stellar-Arena](https://github.com/VladimirRadev/Stellar-Arena); holds `GAME_ROLE` (granted in its deploy, block 11,876,094) |
-| StellarForge | pending deployment | will hold `GAME_ROLE`; see [Forge](#forge-redeem-trophies-for-items) |
+| StellarForge | [`0x9e4aB76402ecdCf0381eBfbab82A025EC4b31045`](https://eth-sepolia.blockscout.com/address/0x9e4aB76402ecdCf0381eBfbab82A025EC4b31045) | verified on Sourcify (exact match) and Blockscout; holds `GAME_ROLE`; see [Forge](#forge-redeem-trophies-for-items) |
 | Deployer and admin | [`0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4`](https://eth-sepolia.blockscout.com/address/0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4) | holds `DEFAULT_ADMIN_ROLE` |
 
-Deployment transaction:
-[`0x9d534be1…659eb2`](https://eth-sepolia.blockscout.com/tx/0x9d534be1e7ae7a66f091fdf2e72382dd2d15532903a81bb41e6f80eab9659eb2)
-(block 11,870,381).
+Deployment transactions:
+
+- StellarStore: [`0x9d534be1…659eb2`](https://eth-sepolia.blockscout.com/tx/0x9d534be1e7ae7a66f091fdf2e72382dd2d15532903a81bb41e6f80eab9659eb2) (block 11,870,381).
+- StellarForge: [`0xfefbfee2…f0f83f`](https://eth-sepolia.blockscout.com/tx/0xfefbfee2d8f36ca276139a613f3400044d0738e96b3cf28f677cc0e5b1f0f83f) (block 11,898,526).
+- `store.grantRole(GAME_ROLE, forge)`: [`0xbdb21bcf…80a617`](https://eth-sepolia.blockscout.com/tx/0xbdb21bcf580d01ae68666248174c1ed1c8d98bc7e1aea6494dcd15526e80a617) (block 11,898,527).
 
 ## Develop
 
@@ -214,6 +219,18 @@ End-to-end run on Ethereum Sepolia on 2026-10-09 from the deployer `0xEb0243ea72
 | 15 | `store.buy(1, 1)` | ok | [`0x25170fc4…af5f1a`](https://eth-sepolia.blockscout.com/tx/0x25170fc47ef8e3bde0ea2b10a34eae68649ca7e20405737642dc96a819af5f1a) | 175113 |
 
 - Step 15 store: bought 1 Guardian Sword for 25 VLAD, paid to treasury 0xE79302DAebc28297745afC206553afBeD9d04d60
+
+### Forge smoke test (2026-10-12)
+
+One `redeem` from the deployer right after the Forge deploy (deployer nonce 73), with balances read before and after:
+
+| Function | Result | Tx (Blockscout) | Gas used |
+|---|---|---|---|
+| `forge.redeem(1, 1)` | ok | [`0xd0ff7253…62acea`](https://eth-sepolia.blockscout.com/tx/0xd0ff7253c2aac5d06e534e10eddfce1c0a0d068ad2ad327620bac4076062acea) | 69966 |
+
+- Block 11,898,533: 2 Trophies burned, 1 Guardian Sword minted. Deployer balances went from 6 Trophies / 3 Swords
+  to 4 Trophies / 4 Swords.
+- The three Forge transactions (deploy, `grantRole`, `redeem`) cost about 0.0000324 ETH in total.
 
 ## Part of the Stellar suite
 

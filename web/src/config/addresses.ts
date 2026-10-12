@@ -14,8 +14,8 @@ export const addresses = {
   store: '0xc1F24EF5887bD340E0d992e8557A4b6E977f151b',
   /** StellarArena (deployed by Stellar-Arena): holds GAME_ROLE here and is the store's treasury / prize pool. */
   arena: '0xE79302DAebc28297745afC206553afBeD9d04d60',
-  /** StellarForge (this repo): redeems Arena Trophies for items. Zero until script/DeployForge.s.sol runs. */
-  stellarForge: '0x0000000000000000000000000000000000000000',
+  /** StellarForge (this repo): redeems Arena Trophies for items. Deployed by script/DeployForge.s.sol, block 11898526. */
+  stellarForge: '0x9e4aB76402ecdCf0381eBfbab82A025EC4b31045',
 } as const satisfies Record<string, Address>
 
 /** Contracts listed in the footer, with Blockscout links. */

@@ -12,6 +12,24 @@
         "treasury": "0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4",
         "baseUri": "https://vladimirradev.github.io/Stellar-Store/metadata/"
       }
+    },
+    "StellarForge": {
+      "address": "0x9e4aB76402ecdCf0381eBfbab82A025EC4b31045",
+      "txHash": "0xfefbfee2d8f36ca276139a613f3400044d0738e96b3cf28f677cc0e5b1f0f83f",
+      "block": 11898526,
+      "gasUsed": 3034507,
+      "constructorArgs": {
+        "store": "0xc1F24EF5887bD340E0d992e8557A4b6E977f151b",
+        "owner": "0xEb0243ea72CB24eFb7128Ee7aca314C080b600c4"
+      },
+      "setup": {
+        "grantRole": {
+          "call": "StellarStore.grantRole(GAME_ROLE, StellarForge)",
+          "txHash": "0xbdb21bcf580d01ae68666248174c1ed1c8d98bc7e1aea6494dcd15526e80a617",
+          "block": 11898527,
+          "gasUsed": 133511
+        }
+      }
     }
   },
   "linked": {
@@ -29,12 +47,26 @@
     "StellarStore": {
       "sourcify": "exact_match",
       "blockscout": "Pass - Verified (is_fully_verified = true)"
+    },
+    "StellarForge": {
+      "sourcify": "exact_match",
+      "blockscout": "Pass - Verified"
     }
   },
   "cost": {
-    "effectiveGasPriceWei": 10000015,
-    "totalGasUsed": 14255966,
-    "totalWei": "142559873839490"
+    "StellarStore": {
+      "effectiveGasPriceWei": 10000015,
+      "totalGasUsed": 14255966,
+      "totalWei": "142559873839490"
+    },
+    "StellarForge": {
+      "effectiveGasPriceWei": 10000017,
+      "totalGasUsed": 3168018,
+      "totalWei": "31680233856306"
+    }
   },
-  "notes": "One transaction (deployer nonce 6 -> 7), sent with forge script --broadcast --slow --skip-simulation so the Sepolia node estimated gas; no --resume was needed. Admin (DEFAULT_ADMIN_ROLE) and initial treasury are the deployer. The Stellar-Arena deploy later called grantRole(GAME_ROLE, arena) and setTreasury(arena); treasury() now returns the StellarArena address."
+  "notes": {
+    "StellarStore": "One transaction (deployer nonce 6 -> 7), sent with forge script --broadcast --slow --skip-simulation so the Sepolia node estimated gas; no --resume was needed. Admin (DEFAULT_ADMIN_ROLE) and initial treasury are the deployer. The Stellar-Arena deploy later called grantRole(GAME_ROLE, arena) and setTreasury(arena); treasury() now returns the StellarArena address.",
+    "StellarForge": "Two transactions in one broadcast (deployer nonce 71 -> 73): new StellarForge(store, deployer), then store.grantRole(GAME_ROLE, forge); sent with forge script script/DeployForge.s.sol --broadcast --slow --skip-simulation, no --resume was needed. owner() is the deployer. Smoke test (nonce 73): redeem(1, 1) from the deployer, tx 0xd0ff7253c2aac5d06e534e10eddfce1c0a0d068ad2ad327620bac4076062acea, block 11898533, gasUsed 69966; deployer balances went from 6 Trophies / 3 Swords to 4 Trophies / 4 Swords."
+  }
 }
