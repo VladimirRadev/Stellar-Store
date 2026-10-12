@@ -10,7 +10,7 @@ import { ArrowIcon, CheckIcon, ExternalIcon, Spinner } from '../shell/icons'
 import { StatTile } from '../shell/StatTile'
 import { TxButton } from '../shell/TxButton'
 import { ConnectButton } from '../shell/WalletButton'
-import { ARENA_URL, FORGE_DEPLOYED, FORGE_ERRORS, forge, itemArt } from './catalog'
+import { ARENA_URL, FORGE_DEPLOYED, FORGE_ERRORS, countOf, forge, itemArt } from './catalog'
 import { QuantityStepper } from './ShopTab'
 import type { StoreData, StoreItem } from './useStoreData'
 
@@ -29,6 +29,7 @@ export function ForgeTab({ data, onOpenInventory }: { data: StoreData; onOpenInv
   const priceOf = (item: StoreItem, i: number) =>
     (prices.data?.[i]?.result as bigint | undefined) ?? DEFAULT_TROPHY_PRICE[item.id.toString()]
   const trophies = data.user.counts?.[TROPHY_INDEX]
+  const trophyName = data.items[TROPHY_INDEX]?.name ?? 'Arena Trophy'
 
   return (
     <div>
@@ -74,6 +75,7 @@ export function ForgeTab({ data, onOpenInventory }: { data: StoreData; onOpenInv
             item={item}
             price={priceOf(item, i)}
             trophies={trophies}
+            trophyName={trophyName}
             trophiesLoading={data.user.loading}
             owned={data.user.counts?.[i]}
             onOpenInventory={onOpenInventory}
@@ -103,6 +105,7 @@ function ForgeCard({
   item,
   price,
   trophies,
+  trophyName,
   trophiesLoading,
   owned,
   onOpenInventory,
@@ -110,6 +113,7 @@ function ForgeCard({
   item: StoreItem
   price: bigint
   trophies: bigint | undefined
+  trophyName: string
   trophiesLoading: boolean
   owned: bigint | undefined
   onOpenInventory: () => void
@@ -183,8 +187,12 @@ function ForgeCard({
           qty={qty}
           cost={cost}
           trophies={trophies}
+          trophyName={trophyName}
           trophiesLoading={trophiesLoading}
-          onForged={setForgedHash}
+          onForged={(hash) => {
+            setForgedHash(hash)
+            setQty(1)
+          }}
         />
       </div>
     </article>
@@ -197,6 +205,7 @@ function ForgeAction({
   qty,
   cost,
   trophies,
+  trophyName,
   trophiesLoading,
   onForged,
 }: {
@@ -204,6 +213,7 @@ function ForgeAction({
   qty: number
   cost: bigint
   trophies: bigint | undefined
+  trophyName: string
   trophiesLoading: boolean
   onForged: (hash: Hash) => void
 }) {
@@ -253,6 +263,7 @@ function ForgeAction({
         request={{ address: addresses.stellarForge, abi: stellarForgeAbi, functionName: 'redeem', args: [item.id, BigInt(qty)] }}
         errorMessages={FORGE_ERRORS}
         onConfirmed={onForged}
+        successMessage={`Redeemed ${countOf(cost, trophyName)} for ${countOf(qty, item.name)}. ${qty === 1 ? 'It is' : 'They are'} in your Inventory tab.`}
         disabled={short > 0n || cost === 0n}
         className="w-full"
       >

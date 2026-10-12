@@ -69,7 +69,18 @@ export const itemArt = (id: bigint) => `${import.meta.env.BASE_URL}metadata/${id
 export const metadataUrl = (id: bigint) =>
   `${window.location.origin}${import.meta.env.BASE_URL}metadata/${id}.json`
 
-/** Readable sentences for the custom errors buy() and approve() can revert with. */
+/** Quantity plus item name for messages: "1 Guardian Sword", "2 Guardian Swords", "4 Arena Trophies". */
+export function countOf(n: bigint | number, name: string): string {
+  if (BigInt(n) === 1n) return `1 ${name}`
+  const plural = /[^aeiou]y$/i.test(name)
+    ? `${name.slice(0, -1)}ies`
+    : /(s|x|z|ch|sh)$/i.test(name)
+      ? `${name}es`
+      : `${name}s`
+  return `${n} ${plural}`
+}
+
+/** Readable sentences for the custom errors buy() can revert with (the allowance errors cover a skipped approval). */
 export const STORE_ERRORS: ErrorMessages = {
   ItemNotBuyable: () => 'This item is not for sale. Arena Trophies are only awarded for Arena wins.',
   ZeroAmount: () => 'Choose a quantity of at least 1.',

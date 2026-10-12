@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import type { Hash } from 'viem'
 import { useConnection, useSwitchChain } from 'wagmi'
-import { iVladTokenAbi, stellarStoreAbi } from '../abi'
+import { stellarStoreAbi } from '../abi'
 import { CHAIN_ID, addresses } from '../config/addresses'
+import { ApproveThen } from '../shell/ApproveThen'
 import { describeError } from '../shell/errors'
 import { explorerTxUrl, formatToken } from '../shell/format'
 import { ArrowIcon, CheckIcon, ExternalIcon, Spinner } from '../shell/icons'
 import { getSite } from '../shell/sites'
 import { TxButton } from '../shell/TxButton'
 import { ConnectButton } from '../shell/WalletButton'
-import { ARENA_URL, DEPLOYED, STORE_ERRORS, itemArt } from './catalog'
+import { ARENA_URL, DEPLOYED, STORE_ERRORS, countOf, itemArt } from './catalog'
 import type { StoreData, StoreItem, UserData } from './useStoreData'
 
 const MAX_QTY = 20
@@ -130,7 +131,16 @@ function ItemCard({
                 </button>
               </p>
             ) : null}
-            <BuyAction item={item} qty={qty} total={total} user={user} onBought={setBoughtHash} />
+            <BuyAction
+              item={item}
+              qty={qty}
+              total={total}
+              user={user}
+              onBought={(hash) => {
+                setBoughtHash(hash)
+                setQty(1)
+              }}
+            />
           </div>
         ) : (
           <div className="space-y-3 border-t border-border/70 pt-4">
@@ -166,7 +176,7 @@ export function QuantityStepper({ value, onChange, itemName }: { value: number; 
   )
 }
 
-/** Wallet gate + approve-then-buy flow for one item. */
+/** Wallet gate + approve-then-buy flow for one item (the two steps come from the shared ApproveThen). */
 function BuyAction({
   item,
   qty,
@@ -207,7 +217,7 @@ function BuyAction({
       </div>
     )
   }
-  if (user.loading || user.vladBalance === undefined || user.allowance === undefined) {
+  if (user.loading || user.vladBalance === undefined) {
     return <span className="skeleton block h-11 w-full" />
   }
   if (user.vladBalance < total) {
@@ -223,49 +233,17 @@ function BuyAction({
     )
   }
 
-  const approved = user.allowance >= total
   return (
-    <div className="space-y-3">
-      <StepTrack approved={approved} />
-      {approved ? (
-        <TxButton
-          key="buy"
-          request={{ address: addresses.store, abi: stellarStoreAbi, functionName: 'buy', args: [item.id, BigInt(qty)] }}
-          errorMessages={STORE_ERRORS}
-          onConfirmed={onBought}
-          className="w-full"
-        >
-          Buy {qty} × {item.name}
-        </TxButton>
-      ) : (
-        <TxButton
-          key="approve"
-          request={{ address: addresses.vladToken, abi: iVladTokenAbi, functionName: 'approve', args: [addresses.store, total] }}
-          errorMessages={STORE_ERRORS}
-          className="w-full"
-        >
-          Approve {formatToken(total)} VLAD
-        </TxButton>
-      )}
-    </div>
-  )
-}
-
-function StepTrack({ approved }: { approved: boolean }) {
-  const dot = 'grid size-5 place-items-center rounded-full text-[0.65rem] font-semibold'
-  return (
-    <ol className="flex items-center gap-2 text-xs" aria-label="Purchase steps">
-      <li className={`inline-flex items-center gap-1.5 ${approved ? 'text-accent-2' : 'text-text'}`}>
-        <span className={`${dot} ${approved ? 'bg-accent/20' : 'bg-accent text-bg'}`}>
-          {approved ? <CheckIcon size={12} /> : '1'}
-        </span>
-        Approve VLAD
-      </li>
-      <li aria-hidden className="h-px flex-1 bg-border" />
-      <li className={`inline-flex items-center gap-1.5 ${approved ? 'text-text' : 'text-muted'}`}>
-        <span className={`${dot} ${approved ? 'bg-accent text-bg' : 'border border-border'}`}>2</span>
-        Buy
-      </li>
-    </ol>
+    <ApproveThen spender={addresses.store} spenderName="the Store" amount={total} stepLabels={['Approve VLAD', 'Buy']}>
+      <TxButton
+        request={{ address: addresses.store, abi: stellarStoreAbi, functionName: 'buy', args: [item.id, BigInt(qty)] }}
+        errorMessages={STORE_ERRORS}
+        onConfirmed={onBought}
+        successMessage={`Bought ${countOf(qty, item.name)} for ${formatToken(total)} VLAD. ${qty === 1 ? 'It is' : 'They are'} in your Inventory tab.`}
+        className="w-full"
+      >
+        Buy {qty} × {item.name}
+      </TxButton>
+    </ApproveThen>
   )
 }
